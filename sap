@@ -1,0 +1,49 @@
+<!DOCTYPE sap>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificação de Etiquetas</title>
+</head>
+<body>
+    <h1>Verificação de Etiquetas</h1>
+    <form id="etiqueta-form">
+        <label for="etiquetaPequena">Etiqueta Pequena:</label>
+        <input type="text" id="etiquetaPequena" name="etiquetaPequena" required>
+        <br><br>
+        <label for="etiquetaGrande">Etiqueta Grande:</label>
+        <input type="text" id="etiquetaGrande" name="etiquetaGrande" required>
+        <br><br>
+        <button type="submit">Verificar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+        document.getElementById('etiqueta-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const etiquetaPequena = document.getElementById('etiquetaPequena').value;
+            const etiquetaGrande = document.getElementById('etiquetaGrande').value;
+
+            fetch('/verificar-etiquetas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ etiquetaPequena, etiquetaGrande }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sucesso) {
+                    document.getElementById('resultado').innerText = 'Caixa liberada!';
+                } else {
+                    document.getElementById('resultado').innerText = 'Verificação falhou! Caixa deve retornar.';
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+            });
+        });
+    </script>
+</body>
+</html>
